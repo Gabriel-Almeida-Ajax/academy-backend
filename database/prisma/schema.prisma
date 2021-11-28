@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model acessos {
+  idUsuarioFk        String             @db.VarChar
+  usuario            String             @db.VarChar
+  senha              String             @db.VarChar
+  idPermissao        Int
+  createdAt          DateTime           @db.Timestamp(6)
+  updatedAt          DateTime?          @db.Timestamp(6)
+  idAcesso           Int                @id @default(autoincrement())
+  descricaoPermissao descricaoPermissao @relation(fields: [idPermissao], references: [idPermissaoFk], onDelete: NoAction, onUpdate: NoAction)
+  usuarios           usuarios           @relation(fields: [idUsuarioFk], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model descricaoPermissao {
+  idPermissaoFk Int       @id
+  descricao     String    @default("Sem descrição cadastrada.") @db.VarChar
+  createdAt     DateTime  @db.Timestamp(6)
+  updatedAt     DateTime? @db.Timestamp(6)
+  acessos       acessos[]
+}
+
+model historicoIMC {
+  idUsuarioFk String    @db.VarChar
+  peso        Float
+  altura      Float
+  createdAt   DateTime  @db.Timestamp(6)
+  updatedAt   DateTime? @db.Timestamp(6)
+  idIMC       Int       @id @default(autoincrement())
+  usuarios    usuarios  @relation(fields: [idUsuarioFk], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model treinos {
+  idTreino        Int       @id @default(autoincrement())
+  idUsuarioFk     String    @db.VarChar
+  nomeExercicio   String    @db.VarChar
+  numeroRepeticao Int
+  numeroSerie     Int?
+  carga           Int?
+  tempoIntervalo  DateTime  @db.Time(6)
+  createdAt       DateTime  @db.Timestamp(6)
+  updatedAt       DateTime? @db.Timestamp(6)
+  usuarios        usuarios  @relation(fields: [idUsuarioFk], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model usuarios {
+  idUsuario    String         @db.VarChar
+  nome         String         @db.VarChar
+  sobrenome    String         @db.VarChar
+  telefone     Int
+  createdAt    DateTime       @db.Timestamp(6)
+  updatedAt    DateTime?      @db.Timestamp(6)
+  acessos      acessos[]
+  historicoIMC historicoIMC[]
+  treinos      treinos[]
+
+  @@id([idUsuario])
+}
