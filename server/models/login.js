@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
+const validator = require('validator');
 
 const { acessos } = require('../../database');
 
@@ -15,15 +16,16 @@ class Login {
 
         })
 
-        if (!access.idUsuarioFk || !access.idPermissao) {
+        const { idUsuarioFk, idPermissao } = access;
+
+        if (!idUsuarioFk || !idPermissao) {
             return res.status(401).json({
                 message: 'Não autorizado'
             })
         }
 
-        const { idUsuarioFk, idPermissao } = access;
 
-        const auth = bcrypt.compare(senha, access.senha)
+        const auth = await bcrypt.compare(senha, access.senha)
 
         if (auth) {
             res.cookie('academy-authenticated', idUsuarioFk);

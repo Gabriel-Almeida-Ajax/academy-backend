@@ -7,7 +7,7 @@ describe("Tests of Login", () => {
   // OK: Metodos de funcionamento 
   test("It should reject if haven't user auth invalid", async () => {
     const response = await request(app)
-      .get("/treinosAluno/teste-usuario-aluno-invalid/teste-senha-aluno-valid");
+      .get("/alunos/treinosAluno/teste-usuario-aluno-invalid/teste-senha-aluno-valid");
 
     expect(response.statusCode).toBe(401);
   });
@@ -16,7 +16,7 @@ describe("Tests of Login", () => {
   // FIXME: Metodos de funcionamento 
   test("It should reject if haven't password auth invalid", async () => {
     const response = await request(app)
-      .get("/treinosAluno/teste-usuario-aluno-valid/teste-senha-aluno-invalid");
+      .get("/alunos/treinosAluno/teste-usuario-aluno-valid/teste-senha-aluno-invalid");
 
     expect(response.statusCode).toBe(401);
   });
@@ -26,7 +26,7 @@ describe("Tests of Login", () => {
   test("It should resolve with cookie, and code 200", async () => {
 
     const response = await request(app)
-      .get("/getAuth/gabriel.lima/252525");
+      .get("/getAuth/teste-usuario-aluno-valid/teste-senha-aluno-valid");
 
     expect(response.statusCode).toBe(200);
   });

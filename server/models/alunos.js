@@ -2,12 +2,8 @@ const { treinos } = require('../../database');
 
 class Alunos {
 
-    async treinosAluno(id, req, res) {
-        const authenticated = req.cookies['academy-authenticated'];
-
-        if (!authenticated)
-            return res.status(401).json({ message: "Não autorizado" })
-
+    async treinosAluno(id, res) {
+    
         const list = await treinos.findMany({
             where: {
                 idUsuarioFk: id

@@ -11,6 +11,9 @@ describe("Database", () => {
     test("It should be return a connection", async () => {
         const connection = await database.$executeRawUnsafe('select 1');
 
+        if(!connection)
+            process.exit(1);
+
         expect(connection).toEqual(1);
 
     });

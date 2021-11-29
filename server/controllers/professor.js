@@ -1,44 +1,51 @@
 const professor = require("../models/professor.js");
 const validator = require("validator");
+const express = require('express');
+const auth = require('../../utils/authentication');
 
 module.exports = (app) => {
+    const professorR = express.Router();
+    
+    professorR.use(auth.withPassAuth);
 
     // OK: Testes de funcionamento
     // OK: Metodos de funcionamento
-    app.get("/listAlunos", (req, res) => {
-        professor.listAlunos(req, res);
+    professorR.get("/listAlunos", (req, res) => {
+        professor.listAlunos(res);
     });
 
     // OK: Testes de funcionamento
-    app.post("/createAluno", (req, res) => {
-        const data = req.body;
-        const authenticated = req.cookies['academy-authenticated']
-        professor.createAluno(data, authenticated, res);
-    });
-
-    // OK: Testes de funcionamento
-    // OK: Metodos de funcionamento
-    app.post("/createTreino", (req, res) => {
+    professorR.post("/createAluno", (req, res) => {
         const data = req.body;
 
-        professor.createTreino(data, req, res);
+        professor.createAluno(data, res);
     });
 
     // OK: Testes de funcionamento
     // OK: Metodos de funcionamento
-    app.delete("/deleteAluno/:id", (req, res) => {
+    professorR.post("/createTreino", (req, res) => {
+        const data = req.body;
+
+        professor.createTreino(data, res);
+    });
+
+    // OK: Testes de funcionamento
+    // OK: Metodos de funcionamento
+    professorR.delete("/deleteAluno/:id", (req, res) => {
         const id = req.params.id;
         
-        professor.deleteAluno(id, req, res);
+        professor.deleteAluno(id, res);
     });
 
     // OK: Testes de funcionamento
     // OK: Metodos de funcionamento
-    app.patch("/editAluno/:id", (req, res) => {
+    professorR.patch("/editAluno/:id", (req, res) => {
         const id = req.params.id;
         const data = req.body;
         
-        professor.editAluno(id, data, req, res);
+        professor.editAluno(id, data, res);
     });
+
+    app.use('/professor', professorR);
 
 }

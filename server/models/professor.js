@@ -8,10 +8,7 @@ dayjs.extend(customParseFormat)
 
 class Alunos {
 
-    async createAluno(data, authenticated, res) {
-        if (!authenticated) {
-            return res.status(401).json({ message: "Não autorizado" });
-        }
+    async createAluno(data, res) {
 
         if (!data.nome) {
             return res.status(400).json({ message: "Nome é obrigatório" });
@@ -92,13 +89,8 @@ class Alunos {
         })
     }
 
-    async createTreino(data, req, res) {
-        const authenticated = req.cookies['academy-authenticated'];
-
-        if (!authenticated) {
-            return res.status(401).json({ message: "Não autorizado" })
-        };
-
+    async createTreino(data, res) {
+        
         if (!data.idUsuario) {
             return res.status(400).json({ message: "Identificar ID do aluno é obrigatório" })
         };
@@ -130,12 +122,7 @@ class Alunos {
         res.status(200).json({ message: "Treino criado com sucesso!" });
     }
 
-    async listAlunos(req, res) {
-        const authenticated = req.cookies['academy-authenticated'];
-
-        if (!authenticated) {
-            return res.status(401).json({ message: "Não autorizado" });
-        }
+    async listAlunos(res) {
 
         const list = await usuarios.findMany({
             select: {
@@ -153,13 +140,8 @@ class Alunos {
         return res.status(200).json({ list, message: "Nenhum aluno encontrado" });
     }
 
-    async deleteAluno(id, req, res) {
-        const authenticated = req.cookies['academy-authenticated'];
-
-        if (!authenticated) {
-            return res.status(401).send("Não autorizado")
-        }
-
+    async deleteAluno(id, res) {
+        
         const exist = await acessos.findFirst({
             where: {
                 idUsuarioFk: id,
@@ -196,12 +178,7 @@ class Alunos {
         res.status(200).json({ message: "Usuario deletado com sucesso!" })
     }
 
-    async editAluno(id, data, req, res) {
-        const authenticated = req.cookies['academy-authenticated'];
-
-        if (!authenticated) {
-            return res.status(401).json({ message: "Não autorizado" })
-        }
+    async editAluno(id, data, res) {
 
         const exist = await acessos.findFirst({
             where: {

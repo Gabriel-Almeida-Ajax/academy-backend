@@ -20,10 +20,10 @@ describe("Mandatory field validation tests", () => {
     test(`(/createAluno) It should return error 400 if the field is missing key: ${key}`, async () => {
 
       const response = await request(app)
-        .post("/createAluno")
+        .post("/professor/createAluno")
         .set('Cookie', ['academy-authenticated=22ed1a08-cfe8-4833-b8a0-945a0264beb6'])
         .send(data);
-      
+
 
       expect(response.statusCode).toBe(400);
     });
@@ -44,7 +44,7 @@ describe("Mandatory field validation tests", () => {
     test(`(/createTreino) It should return error 400 if the field is missing key: ${key}`, async () => {
 
       const response = await request(app)
-        .post("/createTreino")
+        .post("/professor/createTreino")
         .set('Cookie', ['academy-authenticated=22ed1a08-cfe8-4833-b8a0-945a0264beb6'])
         .send(data);
 
@@ -66,7 +66,7 @@ describe("Authentication tests", () => {
       altura: "1.70",
     };
 
-    const response = await request(app).post("/createAluno").send(aluno);
+    const response = await request(app).post("/professor/createAluno").send(aluno);
 
     expect(response.statusCode).toBe(401);
   });
@@ -81,13 +81,13 @@ describe("Authentication tests", () => {
       tempoIntervalo: '00:30:00.000'
     };
 
-    const response = await request(app).post("/createTreino").send(aluno);
+    const response = await request(app).post("/professor/createTreino").send(aluno);
 
     expect(response.statusCode).toBe(401);
   });
 
   test("(/listAlunos) It should reject if haven't auth", async () => {
-    const response = await request(app).get("/listAlunos");
+    const response = await request(app).get("/professor/listAlunos");
 
     expect(response.statusCode).toBe(401);
   });
@@ -95,7 +95,7 @@ describe("Authentication tests", () => {
   test("(/editAluno/:id) It should reject if haven't auth", async () => {
 
     const response = await request(app)
-      .patch('/editAluno/state-idUsuario');
+      .patch('/professor/editAluno/state-idUsuario');
 
     expect(response.statusCode).toBe(401);
   });
@@ -103,7 +103,7 @@ describe("Authentication tests", () => {
   test("(/deleteAluno/:id) It should reject if haven't auth", async () => {
 
     const response = await request(app)
-      .delete('/deleteAluno/state-idUsuario');
+      .delete('/professor/deleteAluno/state-idUsuario');
 
     expect(response.statusCode).toBe(401);
   });
@@ -121,11 +121,12 @@ describe("Tests of Professor", () => {
       altura: 1.70,
     };
 
-    const response = await request(app).post("/createAluno")
+    const response = await request(app)
+      .post("/professor/createAluno")
       .set('Cookie', ['academy-authenticated=22ed1a08-cfe8-4833-b8a0-945a0264beb6'])
       .send(aluno);
 
-    if(response.body.idUsuario)
+    if (response.body.idUsuario)
       state.idUsuario = response.body.idUsuario;
 
     expect(response.statusCode).toBe(200);
@@ -142,7 +143,7 @@ describe("Tests of Professor", () => {
     };
 
     const response = await request(app)
-      .post("/createTreino")
+      .post("/professor/createTreino")
       .set('Cookie', ['academy-authenticated=22ed1a08-cfe8-4833-b8a0-945a0264beb6'])
       .send(aluno);
 
@@ -151,7 +152,7 @@ describe("Tests of Professor", () => {
 
   test("It should edit a students", async () => {
     const response = await request(app)
-      .patch(`/editAluno/${state.idUsuario}`)
+      .patch(`/professor/editAluno/${state.idUsuario}`)
       .set('Cookie', ['academy-authenticated=22ed1a08-cfe8-4833-b8a0-945a0264beb6'])
       .send({
         nome: "@Nome Composto Editado",
@@ -166,17 +167,17 @@ describe("Tests of Professor", () => {
   test("It should list of students", async () => {
 
     const response = await request(app)
-      .get("/listAlunos")
+      .get("/professor/listAlunos")
       .set('Cookie', ['academy-authenticated=22ed1a08-cfe8-4833-b8a0-945a0264beb6']);
 
     expect(response.statusCode).toBe(200);
   });
 
   test("It should delete a students", async () => {
-    jest.setTimeout(newTimeout = 60000);
+    jest.setTimeout(10000);
 
     const response = await request(app)
-      .delete(`/deleteAluno/${state.idUsuario}`)
+      .delete(`/professor/deleteAluno/${state.idUsuario}`)
       .set('Cookie', ['academy-authenticated=22ed1a08-cfe8-4833-b8a0-945a0264beb6']);
 
     expect(response.statusCode).toBe(200);
